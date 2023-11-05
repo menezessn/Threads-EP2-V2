@@ -1,4 +1,4 @@
-package ReadFileService;
+package FileService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -6,20 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ReadFile {
+public class FileService{
 
-    ArrayList<String> contentFile = new ArrayList<>();
+    public static ArrayList<String> readContentFile(String path) throws FileNotFoundException {
 
-    public ReadFile(String path) throws FileNotFoundException {
+        ArrayList<String> contentFile = new ArrayList<String>();
 
         String lineInFile;
         boolean fileFinish = false;
         BufferedReader bf = new BufferedReader(new FileReader(path));
 
-        try{
-            while( !fileFinish ){
+        try {
+            while (!fileFinish) {
                 lineInFile = bf.readLine();
-                if(lineInFile != null){
+                if (lineInFile != null) {
                     contentFile.add(lineInFile);
                 } else {
                     fileFinish = true;
@@ -28,6 +28,7 @@ public class ReadFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return contentFile;
     }
 }
 
