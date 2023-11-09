@@ -12,9 +12,11 @@ public class ReadersService implements Runnable{
     }
 
     public void run(){
-        Random random = new Random();
-        int randomPositionNumber = random.nextInt(100);
-        System.out.println(pointContentFile.get(randomPositionNumber));
+        for(int i = 0; i < 100; i++){
+            Random random = new Random();
+            int randomPositionNumber = random.nextInt(100);
+            System.out.println(pointContentFile.get(randomPositionNumber));
+        }
     }
 
     public static ArrayList<ReadersService> createReaders(int quantity, ArrayList<String> criticBase){

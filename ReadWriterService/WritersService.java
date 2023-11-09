@@ -11,10 +11,14 @@ public class WritersService implements Runnable{
         this.pointContentFile = contentFileBase;
     }
 
-    public void run(){
-        Random random = new Random();
-        int randomPositionNumber = random.nextInt(100);
-        pointContentFile.set(randomPositionNumber, "MODIFICADO");
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            synchronized (this) {
+                Random random = new Random();
+                int randomPositionNumber = random.nextInt(100);
+                pointContentFile.set(randomPositionNumber, "MODIFICADO");
+            }
+        }
     }
 
     public static ArrayList<WritersService> createWriters(int quantity, ArrayList<String> criticBase){
