@@ -12,12 +12,17 @@ public class WritersService implements Runnable{
     }
 
     public void run() {
+        synchronized (this){
         for (int i = 0; i < 100; i++) {
-            synchronized (this) {
-                Random random = new Random();
-                int randomPositionNumber = random.nextInt(100);
-                pointContentFile.set(randomPositionNumber, "MODIFICADO");
+            Random random = new Random();
+            int randomPositionNumber = random.nextInt(100);
+            pointContentFile.set(randomPositionNumber, "MODIFICADO");
             }
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -3,7 +3,9 @@ import ReadWriterService.ReadersService;
 import ReadWriterService.WritersService;
 
 import java.io.FileNotFoundException;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class Main {
 
@@ -12,24 +14,45 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
         contentFile = FileService.readContentFile("bd.txt");
 
-        // Teste inicial: 99 Leitores e 1 Escritor
-        ArrayList<ReadersService> readers = ReadersService.createReaders(99, contentFile);
-        ArrayList<WritersService> writers = WritersService.createWriters(1, contentFile);
+        int readersQuantity, writersQuantity, loopController;
 
-        ArrayList<Thread> threadsList = new ArrayList<Thread>();
-        for(int i = 0; i < readers.size(); i ++){
-            threadsList.add(new Thread(readers.get(i)));
-        }
+        readersQuantity = 99;
+        writersQuantity = 1;
+        loopController = 0;
 
-        for(int i = 0; i < writers.size(); i++){
-            threadsList.add(new Thread(writers.get(i)));
-        }
+        while(loopController < 100) {
 
-        for(int i = 0; i < threadsList.size(); i++){
-            threadsList.get(i).start();
+            CountDownLatch latch = new CountDownLatch(100);
+
+            ArrayList<ReadersService> readers = ReadersService.createReaders(readersQuantity, contentFile);
+            ArrayList<WritersService> writers = WritersService.createWriters(writersQuantity, contentFile);
+
+            ArrayList<Thread> threadsList = new ArrayList<Thread>();
+
+            for(ReadersService readerInArray: readers){
+                threadsList.add(new Thread(readerInArray));
+            }
+            for(WritersService writerInArray: writers){
+                threadsList.add(new Thread(writerInArray));
+            }
+
+
+            long timeStart = System.currentTimeMillis();
+            for(Thread threadInArray: threadsList){
+                threadInArray.start();
+            }
+
+            try {
+                // Aguarda até que todas as threads tenham chamado latch.countDown()
+                latch.await();
+            } catch (InterruptedException e) {
+                // Lidar com a interrupção, se necessário
+                e.printStackTrace();
+            }
+            long timeTotal = System.currentTimeMillis() - timeStart;
+
+            System.out.printf("TESTE NÚMERO: %d. \nNumero de Readers: %d ; Numero de Writers: %d -> Tempo total de execução %d", loopController, readersQuantity, writersQuantity, timeTotal);
         }
-        int lastThread = threadsList.size() - 1;
-        threadsList.get(lastThread).join();
 
     }
 }
