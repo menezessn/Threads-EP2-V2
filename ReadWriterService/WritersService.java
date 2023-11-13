@@ -13,17 +13,22 @@ public class WritersService implements Runnable{
     }
 
     public void run() {
-
-        for (int i = 0; i < 100; i++) {
-            Random random = new Random();
-            int randomPositionNumber = random.nextInt(100);
-            pointContentFile.set(randomPositionNumber, "MODIFICADO");
+        try {
+            ReaderWriterService.writeLock.acquire();
+            for (int i = 0; i < 100; i++) {
+                Random random = new Random();
+                int randomPositionNumber = random.nextInt(100);
+                pointContentFile.set(randomPositionNumber, "MODIFICADO");
             }
 
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            ReaderWriterService.writeLock.release();
+        }catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
     }
 

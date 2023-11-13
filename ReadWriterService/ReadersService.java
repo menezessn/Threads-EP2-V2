@@ -11,10 +11,19 @@ public class ReadersService implements Runnable{
         this.pointContentFile = contentFileBase;
     }
 
-    public void run(){
+    public void run() {
+        try {
+            //Acquire Section
+            ReaderWriterService.readLock.acquire();
+            ReaderWriterService.readCount++;
+            if (ReaderWriterService.readCount == 1) {
+                ReaderWriterService.writeLock.acquire();
+            }
+            ReaderWriterService.readLock.release();
 
+            //reading section
             String variavel_local;
-            for(int i = 0; i < 100; i++) {
+            for (int i = 0; i < 100; i++) {
                 Random random = new Random();
                 int randomPositionNumber = random.nextInt(100);
                 variavel_local = pointContentFile.get(randomPositionNumber);
@@ -24,6 +33,17 @@ public class ReadersService implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            //Releasing section
+            ReaderWriterService.readLock.acquire();
+            ReaderWriterService.readCount--;
+            if (ReaderWriterService.readCount == 0) {
+                ReaderWriterService.writeLock.release();
+            }
+            ReaderWriterService.readLock.release();
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static ArrayList<ReadersService> createReaders(int quantity, ArrayList<String> criticBase){
