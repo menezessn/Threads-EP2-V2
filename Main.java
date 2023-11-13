@@ -24,7 +24,7 @@ public class Main {
         writersQuantity = 1;
         loopController = 0;
 
-        while(loopController < 100) {
+        while(loopController < 99) {
 
             //define um contador das threads
             CountDownLatch latch = new CountDownLatch(100);
@@ -79,16 +79,17 @@ public class Main {
                 threadInArray.start();
             }
 
-            try {
-                // Aguarda até que todas as threads tenham chamado latch.countDown()
-                latch.await();
-            } catch (InterruptedException e) {
-                // Lidar com a interrupção, se necessário
-                e.printStackTrace();
+            for(Thread threadInArray: threadsList){
+                threadInArray.join();
             }
+
             long timeTotal = System.currentTimeMillis() - timeStart;
 
-            System.out.printf("TESTE NÚMERO: %d. \nNumero de Readers: %d ; Numero de Writers: %d -> Tempo total de execução %d", loopController, readersQuantity, writersQuantity, timeTotal);
+            System.out.printf("TESTE NÚMERO %d: Numero de Readers: %d ; Numero de Writers: %d -> Tempo total de execução %d\n", loopController, readersQuantity, writersQuantity, timeTotal);
+
+            loopController++;
+            writersQuantity++;
+            readersQuantity--;
         }
 
     }
