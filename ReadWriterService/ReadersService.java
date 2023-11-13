@@ -12,17 +12,18 @@ public class ReadersService implements Runnable{
     }
 
     public void run(){
-        String variavel_local;
-        for(int i = 0; i < 100; i++) {
-            Random random = new Random();
-            int randomPositionNumber = random.nextInt(100);
-            variavel_local = pointContentFile.get(randomPositionNumber);
-        }
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+            String variavel_local;
+            for(int i = 0; i < 100; i++) {
+                Random random = new Random();
+                int randomPositionNumber = random.nextInt(100);
+                variavel_local = pointContentFile.get(randomPositionNumber);
+            }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     public static ArrayList<ReadersService> createReaders(int quantity, ArrayList<String> criticBase){

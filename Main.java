@@ -22,9 +22,9 @@ public class Main {
 
         readersQuantity = 99;
         writersQuantity = 1;
-        loopController = 0;
+        loopController = 1;
 
-        while(loopController < 99) {
+        while(loopController < 100) {
 
             //define um contador das threads
             CountDownLatch latch = new CountDownLatch(100);

@@ -2,6 +2,7 @@ package ReadWriterService;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 public class WritersService implements Runnable{
 
@@ -12,13 +13,13 @@ public class WritersService implements Runnable{
     }
 
     public void run() {
-        synchronized (this){
+
         for (int i = 0; i < 100; i++) {
             Random random = new Random();
             int randomPositionNumber = random.nextInt(100);
             pointContentFile.set(randomPositionNumber, "MODIFICADO");
             }
-        }
+
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
