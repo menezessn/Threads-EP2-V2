@@ -14,12 +14,9 @@ public class ReadersService implements Runnable{
     public void run() {
         try {
             //Acquire Section
-            ReaderWriterService.readLock.acquire();
-            ReaderWriterService.readCount++;
-            if (ReaderWriterService.readCount == 1) {
-                ReaderWriterService.writeLock.acquire();
-            }
-            ReaderWriterService.readLock.release();
+            ReaderWriterService.Lock.acquire();
+
+
 
             //reading section
             String variavel_local;
@@ -35,12 +32,8 @@ public class ReadersService implements Runnable{
             }
 
             //Releasing section
-            ReaderWriterService.readLock.acquire();
-            ReaderWriterService.readCount--;
-            if (ReaderWriterService.readCount == 0) {
-                ReaderWriterService.writeLock.release();
-            }
-            ReaderWriterService.readLock.release();
+            ReaderWriterService.Lock.release();
+
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }

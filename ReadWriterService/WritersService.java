@@ -14,7 +14,7 @@ public class WritersService implements Runnable{
 
     public void run() {
         try {
-            ReaderWriterService.writeLock.acquire();
+            ReaderWriterService.Lock.acquire();
             for (int i = 0; i < 100; i++) {
                 Random random = new Random();
                 int randomPositionNumber = random.nextInt(100);
@@ -26,7 +26,7 @@ public class WritersService implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            ReaderWriterService.writeLock.release();
+            ReaderWriterService.Lock.release();
         }catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
